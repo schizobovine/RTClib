@@ -7,20 +7,19 @@
 #define SECONDS_PER_DAY 86400L
 #define SECONDS_FROM_1970_TO_2000 946684800
 
-#if ARDUINO > 22
-#include <arduino.h>
+#if ARDUINO < 100
+#include <WProgram.h>
+#else
+#include <Arduino.h>
 #endif
 
-#if ARDUINO <= 22
-#include <WProgram.h>
-#endif
 
 
 int i = 0; //The new wire library needs to take an int when you are sending for the zero register
 ////////////////////////////////////////////////////////////////////////////////
 // utility code, some of this could be exposed in the DateTime API if needed
 
-static const prog_uint8_t daysInMonth[] PROGMEM = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+static const uint8_t daysInMonth[] PROGMEM = { 31,28,31,30,31,30,31,31,30,31,30,31 };
 
 // number of days since 2000/01/01, valid for 2001..2099
 static uint16_t date2days(uint16_t y, uint8_t m, uint8_t d)
@@ -105,7 +104,12 @@ DateTime::DateTime (const char* date, const char* time)
     switch (date[0])
     {
     case 'J':
-        m = date[1] == 'a' ? 1 : m = date[2] == 'n' ? 6 : 7;
+        if ( date[1] == 'a' )
+	    m = 1;
+	else if ( date[2] == 'n' )
+	    m = 6;
+	else
+	    m = 7;
         break;
     case 'F':
         m = 2;
