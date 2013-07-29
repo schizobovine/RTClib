@@ -38,7 +38,7 @@ RTC_DS3231 RTC;
                                //WE USE TIMER1 so that it does not interfere with Arduino delay() command
 #define INT0_PIN   2     // INT0 pin for 32kHz testing?
 #define LED_PIN    9     // random LED for testing...tie to ground through series resistor..
-
+#define LED_ONBAORD 13   // Instead of hooking up an LED, the nano has an LED at pin 13.
 
 //----------- GLOBALS  -------------------------
 
@@ -56,6 +56,7 @@ volatile long TOGGLE_COUNT = 0;
 ISR(TIMER1_COMPA_vect) {
   //digitalWrite(LED_PIN, !digitalRead(LED_PIN));      // ^ 1);
   digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+  digitalWrite(LED_ONBAORD, !digitalRead(LED_ONBAORD)); //useful on nano's and some other 'duino's
   TOGGLE_COUNT++;
 }    
 
