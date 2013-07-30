@@ -315,8 +315,8 @@ void RTC_DS3231::SQWFrequency(uint8_t freq)
 	Wire.endTransmission();
 }
 
-void RTC_DS3231::getControlRegisterData(char &datastr) 
-{	
+void RTC_DS3231::getControlRegisterData(char &datastr) {
+
 	Wire.beginTransmission(DS3231_ADDRESS);
     Wire.write( DS3231_REG_CONTROL );
     Wire.endTransmission();
@@ -335,17 +335,21 @@ void RTC_DS3231::getControlRegisterData(char &datastr)
     strcat(&datastr, cregstr);
     strcat(&datastr, "\nsreg: ");
     strcat(&datastr, sregstr);
-    strcat(&datastr, "\n------------------------------\n"); 
-    
+    strcat(&datastr, "\n------------------------------\n");     
 
     return;
 }
+
+
+/********************************************************
+* UTILITY and WORKER METHODS
+*********************************************************/
 
 /**
  * Takes one byte and loads up bytestr[8] with the value
  *  eg  "8" loads bytestr with "00000111"
  */
-void RTC_DS3231::getBinaryString(uint8_t byteval, char bytestr[]) 
+private void RTC_DS3231::getBinaryString(uint8_t byteval, char bytestr[]) 
 {
 	uint8_t bitv;
 	int i = 0;
@@ -359,6 +363,7 @@ void RTC_DS3231::getBinaryString(uint8_t byteval, char bytestr[])
            }
     }
 }
+
 
 
 
