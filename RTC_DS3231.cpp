@@ -349,7 +349,7 @@ void RTC_DS3231::getControlRegisterData(char &datastr) {
  * Takes one byte and loads up bytestr[8] with the value
  *  eg  "8" loads bytestr with "00000111"
  */
-private void RTC_DS3231::getBinaryString(uint8_t byteval, char bytestr[]) 
+void RTC_DS3231::getBinaryString(uint8_t byteval, char bytestr[]) 
 {
 	uint8_t bitv;
 	int i = 0;
@@ -357,9 +357,9 @@ private void RTC_DS3231::getBinaryString(uint8_t byteval, char bytestr[])
     for (i = 0; i < 8; i++) {                    
            bitv = (byteval >> i) & 1;
            if (bitv == 0) {
-               bytestr[i] = '0';
+               bytestr[7-i] = '0';
            } else {
-               bytestr[i] = '1';
+               bytestr[7-i] = '1';
            }
     }
 }
