@@ -106,8 +106,8 @@ float RTC_DS3231::getTempAsFloat()
     Wire.endTransmission();
 
 	Wire.requestFrom(DS3231_ADDRESS, 2);
-    int8_t sig   = bcd2bin(Wire.RECEIVE());                  //signed MSB
-    uint8_t fract = bcd2bin(Wire.RECEIVE() & 0b11000000);    //rest should be zeroes anyway.
+    int8_t sig   = Wire.RECEIVE();                  //signed MSB
+    uint8_t fract = Wire.RECEIVE() & 0b11000000;    //rest should be zeroes anyway.
     
     fract = fract >> 6;                // now in 2 lsb's
     float temp = (float)fract * 0.25;  // total up,  .00, .25, .50
@@ -141,8 +141,8 @@ int16_t RTC_DS3231::getTempAsWord()
     Wire.endTransmission();
 
 	Wire.requestFrom(DS3231_ADDRESS, 2);
-    int8_t sig   = bcd2bin(Wire.RECEIVE());                  //signed MSB
-    uint8_t fract = bcd2bin(Wire.RECEIVE() & 0b11000000);    //rest should be zeroes anyway.
+    int8_t sig   = Wire.RECEIVE();                  //signed MSB
+    uint8_t fract = Wire.RECEIVE() & 0b11000000;    //rest should be zeroes anyway.
     
     int16_t temp = sig;           //put into lower byte
     temp = temp << 8 ;            //shift to upper byte
