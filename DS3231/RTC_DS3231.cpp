@@ -2,9 +2,12 @@
 // Released to the public domain! Enjoy!
 //
 // Modified and expanded by Red Byer 7/24/2013 to work with 3231 better
-//     www.redstoyland.com      Find the code under "mizraith" on github
+//     www.redstoyland.com      https://github.com/mizraith/RTClib
 //
 //  See .h file for the additions
+//
+// Modified by Sean Caulfield 2015-03-06 (contributions under GPL2.0)
+//
 
 #if ARDUINO < 100
 #include <WProgram.h>
