@@ -6,7 +6,8 @@
 //
 //  See .h file for the additions
 //
-// Modified by Sean Caulfield 2015-03-06 (contributions under GPL2.0)
+// Modified by Sean Caulfield 2015-03-06 for ATTiny85 support (contributions
+// under GPL2.0)
 //
 
 #if ARDUINO < 100
@@ -15,8 +16,13 @@
 #include <Arduino.h>
 #endif
 
+#ifdef __AVR_ATtiny85__
+#include <TinyWireM.h>
+#define Wire TinyWireM
+#else
 #include <avr/pgmspace.h>
 #include <Wire.h>
+#endif
 
 #include "RTClib.h"
 #include "RTC_DS3231.h"
