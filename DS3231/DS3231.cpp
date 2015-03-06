@@ -25,7 +25,7 @@
 #endif
 
 #include "RTClib.h"
-#include "RTC_DS3231.h"
+#include "DS3231.h"
 
 
 #if ARDUINO < 100
