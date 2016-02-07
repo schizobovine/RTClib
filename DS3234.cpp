@@ -7,10 +7,15 @@
 #include <Arduino.h>
 #endif
 
+#if defined(__AVR__)
 #include <avr/pgmspace.h>
+#elif defined(ESP8266)
+#include <pgmspace.h>
+#endif
+
 #include <SPI.h>
 #include "RTClib.h"
-#include "RTC_DS3234.h"
+#include "DS3234.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // RTC_DS3234 implementation

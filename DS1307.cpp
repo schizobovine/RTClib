@@ -7,8 +7,19 @@
 #include <Arduino.h>
 #endif
 
-#include <avr/pgmspace.h>
+#ifdef __AVR_ATtiny85__
+#include <TinyWireM.h>
+#define Wire TinyWireM
+#else
 #include <Wire.h>
+#endif
+
+#if defined(__AVR__)
+#include <avr/pgmspace.h>
+#elif defined(ESP8266)
+#include <pgmspace.h>
+#endif
+
 #include "RTClib.h"
 #include "DS1307.h"
 
