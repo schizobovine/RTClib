@@ -10,7 +10,7 @@
 #include <avr/pgmspace.h>
 #include <Wire.h>
 #include "RTClib.h"
-#include "RTC_DS1307.h"
+#include "DS1307.h"
 
 #define DS1307_ADDRESS 0x68
 
