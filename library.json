@@ -1,0 +1,17 @@
+{
+  "name": "RTClib",
+  "frameworks": "Arduino",
+  "keywords": "Time, date, hour, minute, second, day, week, month, year, RTC",
+  "description": "RTC interface library for DS1307, DS3231, and DS3234",
+  "url": "https://github.com/schizobovine/RTClib",
+  "authors": [
+    { "name": "Jean-Claude Wippler (Jeelabs)" },
+    { "name": "Red Byer (mizraith)" },
+    { "name": "Sean Caulfield" }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/schizobovine/RTClib"
+  }
+}
+
