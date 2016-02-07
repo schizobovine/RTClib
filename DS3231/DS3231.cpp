@@ -20,8 +20,13 @@
 #include <TinyWireM.h>
 #define Wire TinyWireM
 #else
-#include <avr/pgmspace.h>
 #include <Wire.h>
+#endif
+
+#if defined(__AVR__)
+#include <avr/pgmspace.h>
+#elif defined(ESP8266)
+#include <pgmspace.h>
 #endif
 
 #include "RTClib.h"

@@ -1,7 +1,12 @@
 // Code by JeeLabs http://news.jeelabs.org/code/
 // Released to the public domain! Enjoy!
 
+#if defined(__AVR__)
 #include <avr/pgmspace.h>
+#elif defined(ESP8266)
+#include <pgmspace.h>
+#endif
+
 #include "RTClib.h"
 
 #define SECONDS_PER_DAY 86400L
