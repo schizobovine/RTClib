@@ -1,6 +1,8 @@
 // Code by JeeLabs http://news.jeelabs.org/code/
 // Released to the public domain! Enjoy!
 
+#include <Arduino.h>
+
 #if defined(__AVR__)
 #include <avr/pgmspace.h>
 #elif defined(ESP8266)
@@ -8,17 +10,6 @@
 #endif
 
 #include "RTClib.h"
-
-#define SECONDS_PER_DAY 86400L
-#define SECONDS_FROM_1970_TO_2000 946684800
-
-#if ARDUINO < 100
-#include <WProgram.h>
-#else
-#include <Arduino.h>
-#endif
-
-
 
 int i = 0; //The new wire library needs to take an int when you are sending for the zero register
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +41,7 @@ static long time2long(uint16_t days, uint8_t h, uint8_t m, uint8_t s)
 
 DateTime::DateTime (uint32_t t)
 {
-    t -= SECONDS_FROM_1970_TO_2000;    // bring to 2000 timestamp from 1970
+    t -= RTC_SECONDS_FROM_1970_TO_2000;    // bring to 2000 timestamp from 1970
 
     ss = t % 60;
     t /= 60;
@@ -166,7 +157,7 @@ uint32_t DateTime::unixtime(void) const
     uint32_t t;
     uint16_t days = date2days(yOff, m, d);
     t = time2long(days, hh, mm, ss);
-    t += SECONDS_FROM_1970_TO_2000;  // seconds from 1970 to 2000
+    t += RTC_SECONDS_FROM_1970_TO_2000;  // seconds from 1970 to 2000
 
     return t;
 }

@@ -10,11 +10,7 @@
 // under GPL2.0)
 //
 
-#if ARDUINO < 100
-#include <WProgram.h>
-#else
 #include <Arduino.h>
-#endif
 
 #ifdef __AVR_ATtiny85__
 #include <TinyWireM.h>
@@ -32,14 +28,8 @@
 #include "RTClib.h"
 #include "DS3231.h"
 
-
-#if ARDUINO < 100
-#define SEND(x) send(x) 
-#define RECEIVE(x) receive(x) 
-#else
 #define SEND(x) write(static_cast<uint8_t>(x))
 #define RECEIVE(x) read(x)
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // RTC_DS3231 implementation

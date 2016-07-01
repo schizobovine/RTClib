@@ -12,7 +12,6 @@
 #ifndef __RTC_DS3231_H__
 #define __RTC_DS3231_H__
 
-
 #include <RTClib.h>
 
 // RTC based on the DS1307 chip connected via I2C and the Wire library

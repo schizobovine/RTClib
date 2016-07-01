@@ -1,11 +1,7 @@
 // Code by JeeLabs http://news.jeelabs.org/code/
 // Released to the public domain! Enjoy!
 
-#if ARDUINO < 100
-#include <WProgram.h>
-#else
 #include <Arduino.h>
-#endif
 
 #ifdef __AVR_ATtiny85__
 #include <TinyWireM.h>
@@ -23,15 +19,8 @@
 #include "RTClib.h"
 #include "DS1307.h"
 
-#define DS1307_ADDRESS 0x68
-
-#if ARDUINO < 100
-#define SEND(x) send(x) 
-#define RECEIVE(x) receive(x) 
-#else
 #define SEND(x) write(static_cast<uint8_t>(x))
 #define RECEIVE(x) read(x)
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // RTC_DS1307 implementation

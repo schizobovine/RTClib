@@ -4,15 +4,19 @@
 #ifndef __RTCLIB_H__
 #define __RTCLIB_H__
 
+#define RTC_SECONDS_FROM_1970_TO_2000 946684800
+
 // Simple general-purpose date/time class (no TZ / DST / leap second handling!)
 class DateTime
 {
 public:
+
     DateTime (uint32_t t =0);
     DateTime (uint16_t year, uint8_t month, uint8_t day,
               uint8_t hour =0, uint8_t min =0, uint8_t sec =0);
     DateTime (const char* date, const char* time);
     DateTime (const DateTime &dt);
+
     uint16_t year() const
     {
         return 2000 + yOff;
