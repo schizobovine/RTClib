@@ -50,8 +50,8 @@
 #define DS3231_CTRL_EOSC      0x80 // Oscillator enable
 #define DS3231_CTRL_OSF       0x80 // Oscillator stopped flag
 
-// RTC based on the DS1307 chip connected via I2C and the Wire library
-class RTC_DS3231
+// RTC based on the DS3231 chip connected via I2C and the Wire library
+class RTC_DS3231 : RTC
 {
 
 public:

@@ -51,7 +51,7 @@
 #define DS1307_CTRL_OUT_HIGH         0x80
 
 // RTC based on the DS1307 chip connected via I2C and the Wire library
-class RTC_DS1307
+class RTC_DS1307 : RTC
 {
 public:
     bool begin(void);
