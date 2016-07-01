@@ -25,53 +25,77 @@
 ////////////////////////////////////////////////////////////////////////////////
 // RTC_DS1307 implementation
 
-uint8_t RTC_DS1307::begin(void)
+bool RTC_DS1307::begin(void)
 {
     return 1;
 }
 
-uint8_t RTC_DS1307::isrunning(void)
+bool RTC_DS1307::enable(void)
+{
+    uint8_t sec_reg = _getSecondsReg();
+
+    // If nonzero, clock is halted, so issue command to start it up
+    if (sec_reg & DS1307_CLOCK_HALT) {
+        Wire.beginTransmission(DS1307_ADDRESS);
+        Wire.SEND(DS1307_REG_SECONDS);
+        Wire.SEND(sec_reg & DS1307_CH_MASK);
+        Wire.endTransmission();
+    }
+
+    return true;
+}
+
+bool RTC_DS1307::isrunning(void)
+{
+    return (_getSecondsReg() & DS1307_CLOCK_HALT) == 0;
+}
+
+uint8_t RTC_DS1307::_getSecondsReg(void)
 {
     Wire.beginTransmission(DS1307_ADDRESS);
-    Wire.SEND(0);
+    Wire.SEND(DS1307_REG_SECONDS);
     Wire.endTransmission();
-
     Wire.requestFrom(DS1307_ADDRESS, 1);
-    uint8_t ss = Wire.RECEIVE();
-    return !(ss>>7);
+    uint8_t ch = Wire.RECEIVE();
+    return ch;
 }
 
 void RTC_DS1307::adjust(const DateTime& dt)
 {
     Wire.beginTransmission(DS1307_ADDRESS);
-    Wire.SEND(0);
+    Wire.SEND(DS1307_REG_SECONDS);
     Wire.SEND(bin2bcd(dt.second()));
     Wire.SEND(bin2bcd(dt.minute()));
     Wire.SEND(bin2bcd(dt.hour()));
-    Wire.SEND(bin2bcd(0));
+    Wire.SEND(bin2bcd(0)); // day of week set to zero b/c it doesn't matter
     Wire.SEND(bin2bcd(dt.day()));
     Wire.SEND(bin2bcd(dt.month()));
     Wire.SEND(bin2bcd(dt.year() - 2000));
-    Wire.SEND(0);
+    // XXX Is this just clobbering the control register for no reason?
+    // Commenting out for now.
+    //Wire.SEND(0);
     Wire.endTransmission();
 }
 
 DateTime RTC_DS1307::now()
 {
+
+    // Move read pointer to start of time data
     Wire.beginTransmission(DS1307_ADDRESS);
-    Wire.SEND(0);
+    Wire.SEND(DS1307_REG_SECONDS);
     Wire.endTransmission();
 
+    // Grab next 7 bytes
     Wire.requestFrom(DS1307_ADDRESS, 7);
-    uint8_t ss = bcd2bin(Wire.RECEIVE() & 0x7F);
+    uint8_t ss = bcd2bin(Wire.RECEIVE() & DS1307_CH_MASK);
     uint8_t mm = bcd2bin(Wire.RECEIVE());
     uint8_t hh = bcd2bin(Wire.RECEIVE());
-    Wire.RECEIVE();
+    Wire.RECEIVE(); // ignore day of week; we dn't need it
     uint8_t d = bcd2bin(Wire.RECEIVE());
     uint8_t m = bcd2bin(Wire.RECEIVE());
-    uint16_t y = bcd2bin(Wire.RECEIVE()) + 2000;
+    uint8_t y = bcd2bin(Wire.RECEIVE());
 
-    return DateTime (y, m, d, hh, mm, ss);
+    return DateTime (y + 2000, m, d, hh, mm, ss);
 }
 
 // vim:ci:sw=4 sts=4 ft=cpp

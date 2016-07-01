@@ -28,7 +28,7 @@ const int SECONDS_W = 0x80;
 const int EOSC = 7;
 const int OSF = 7;
 
-uint8_t RTC_DS3234::begin(void)
+bool RTC_DS3234::begin(void)
 {
     pinMode(cs_pin,OUTPUT);
     cs(HIGH);
@@ -61,7 +61,7 @@ void RTC_DS3234::cs(int _value)
     digitalWrite(cs_pin,_value);
 }
 
-uint8_t RTC_DS3234::isrunning(void)
+bool RTC_DS3234::isrunning(void)
 {
     cs(LOW);
     SPI.transfer(CONTROL_R);

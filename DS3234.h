@@ -11,9 +11,10 @@ class RTC_DS3234
 {
 public:
     RTC_DS3234(int _cs_pin): cs_pin(_cs_pin) {}
-    uint8_t begin(void);
+    bool begin(void);
     void adjust(const DateTime& dt);
-    uint8_t isrunning(void);
+    bool enable(void);
+    bool isrunning(void);
     DateTime now();
 
 protected:

@@ -34,20 +34,38 @@
 ////////////////////////////////////////////////////////////////////////////////
 // RTC_DS3231 implementation
 
-uint8_t RTC_DS3231::begin(void)
+bool RTC_DS3231::begin(void)
 {
-    return 1;
+    return true;
 }
 
-uint8_t RTC_DS3231::isrunning(void)
+bool RTC_DS3231::enable(void)
+{
+    Wire.beginTransmission(DS3231_ADDRESS);
+    Wire.SEND(DS3231_REG_CONTROL);
+    Wire.endTransmission();
+    Wire.requestFrom(DS3231_ADDRESS, 1);
+    uint8_t ctrl = Wire.RECEIVE();
+    
+    // If oscillator is set off, flip it on
+    if ((ctrl & DS3231_CTRL_EOSC) != 0) {
+        Wire.beginTransmission(DS3231_ADDRESS);
+        Wire.SEND(DS3231_REG_CONTROL);
+        Wire.SEND(ctrl & (~DS3231_CTRL_EOSC));
+        Wire.endTransmission();
+    }
+
+    return true;
+}
+
+bool RTC_DS3231::isrunning(void)
 {
     Wire.beginTransmission(DS3231_ADDRESS);
     Wire.SEND(DS3231_REG_STATUS_CTL);
     Wire.endTransmission();
-
     Wire.requestFrom(DS3231_ADDRESS, 1);
-    uint8_t ss = Wire.RECEIVE();
-    return !(ss>>7);
+    uint8_t ctrl = Wire.RECEIVE() & DS3231_CTRL_OSF;
+    return (ctrl == 0);
 }
 
 /**
@@ -398,8 +416,5 @@ void RTC_DS3231::getBinaryString(uint8_t byteval, char bytestr[])
            }
     }
 }
-
-
-
 
 // vim:ci:sw=4 sts=4 ft=cpp

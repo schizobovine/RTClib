@@ -14,29 +14,6 @@
 
 #include <RTClib.h>
 
-// RTC based on the DS1307 chip connected via I2C and the Wire library
-class RTC_DS3231
-{
-public:
-    uint8_t begin(void);                        // tested in example code
-    void adjust(const DateTime& dt);            // tested in example code
-    uint8_t isrunning(void);                    // tested in example code
-    DateTime now();                             // tested in example code
-    float getTempAsFloat();                     // tested in example code
-    int16_t getTempAsWord();                    // tested in example code
-    void enable32kHz(uint8_t enable);           // tested in example code
-    void forceTempConv(uint8_t block);          // tested in example code
-    void SQWEnable(uint8_t enable);             // tested in example code
-    void BBSQWEnable(uint8_t enable);           // tested in example code
-    void SQWFrequency(uint8_t freq);            // tested in example code
-    void getControlRegisterData(char &datastr); // tested in example code
-    void clearControlRegisters();
-    
-private:
-    void getBinaryString(uint8_t byteval, char bytestr[]);
-
-};
-
 //I2C Slave Address  0b1101000 per the datasheet
 #define DS3231_ADDRESS 0x68  
 
@@ -70,6 +47,34 @@ private:
 #define DS3231_SQW_FREQ_4096 0b00010000 // 4096Hz
 #define DS3231_SQW_FREQ_8192 0b00011000 // 8192Hz
 
+#define DS3231_CTRL_EOSC      0x80 // Oscillator enable
+#define DS3231_CTRL_OSF       0x80 // Oscillator stopped flag
+
+// RTC based on the DS1307 chip connected via I2C and the Wire library
+class RTC_DS3231
+{
+
+public:
+    bool begin(void);
+    void adjust(const DateTime& dt);
+    bool enable(void);
+    bool isrunning(void);
+    DateTime now();
+
+    float getTempAsFloat();
+    int16_t getTempAsWord();
+    void enable32kHz(uint8_t enable);
+    void forceTempConv(uint8_t block);
+    void SQWEnable(uint8_t enable);
+    void BBSQWEnable(uint8_t enable);
+    void SQWFrequency(uint8_t freq);
+    void getControlRegisterData(char &datastr);
+    void clearControlRegisters();
+    
+private:
+    void getBinaryString(uint8_t byteval, char bytestr[]);
+
+};
 
 #endif // __RTC_DS3231_H__
 
