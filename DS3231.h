@@ -19,24 +19,22 @@
 class RTC_DS3231
 {
 public:
-    static uint8_t begin(void);                 // tested in example code
-    static void adjust(const DateTime& dt);		// tested in example code
-    uint8_t isrunning(void);					// tested in example code
-    static DateTime now();						// tested in example code
-    static float getTempAsFloat();				// tested in example code
-    static int16_t getTempAsWord();				// tested in example code
-    static void enable32kHz(uint8_t enable);	// tested in example code
-    static void forceTempConv(uint8_t block);	// tested in example code
-    static void SQWEnable(uint8_t enable);		// tested in example code
-    static void BBSQWEnable(uint8_t enable);	// tested in example code
-    static void SQWFrequency(uint8_t freq);		// tested in example code
-    static void getControlRegisterData(char &datastr);     // tested in example code
-
-    static void clearControlRegisters();
-    
+    uint8_t begin(void);                        // tested in example code
+    void adjust(const DateTime& dt);            // tested in example code
+    uint8_t isrunning(void);                    // tested in example code
+    DateTime now();                             // tested in example code
+    float getTempAsFloat();                     // tested in example code
+    int16_t getTempAsWord();                    // tested in example code
+    void enable32kHz(uint8_t enable);           // tested in example code
+    void forceTempConv(uint8_t block);          // tested in example code
+    void SQWEnable(uint8_t enable);             // tested in example code
+    void BBSQWEnable(uint8_t enable);           // tested in example code
+    void SQWFrequency(uint8_t freq);            // tested in example code
+    void getControlRegisterData(char &datastr); // tested in example code
+    void clearControlRegisters();
     
 private:
-	static void getBinaryString(uint8_t byteval, char bytestr[]);
+    void getBinaryString(uint8_t byteval, char bytestr[]);
 
 };
 
