@@ -12,6 +12,7 @@ public:
     DateTime (uint16_t year, uint8_t month, uint8_t day,
               uint8_t hour =0, uint8_t min =0, uint8_t sec =0);
     DateTime (const char* date, const char* time);
+    DateTime (const DateTime &dt);
     uint16_t year() const
     {
         return 2000 + yOff;
@@ -55,21 +56,31 @@ protected:
 extern uint8_t bcd2bin (uint8_t val);
 extern uint8_t bin2bcd (uint8_t val);
 
+//
+// Base RTC class to wrangle all the chips into one interface
+// 
+
+class RTC
+{
+    public:
+        RTC();
+        uint8_t begin();
+        void adjust(const DateTime& dt);
+        uint8_t isrunning(void);
+        DateTime now();
+
+};
+
 // RTC using the internal millis() clock, has to be initialized before use
 // NOTE: this clock won't be correct once the millis() timer rolls over (>49d?)
-class RTC_Millis
+class RTC_Millis : RTC
 {
 public:
-    void begin(const DateTime& dt)
-    {
-        adjust(dt);
-    }
+    RTC_Millis(void);
+    uint8_t begin();
+    uint8_t begin(const DateTime& dt);
     void adjust(const DateTime& dt);
     DateTime now();
-    RTC_Millis(void)
-    {
-	adjust(DateTime(2000,1,1,0,0,0));
-    }
 
 protected:
     long offset;

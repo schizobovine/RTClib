@@ -144,6 +144,17 @@ DateTime::DateTime (const char* date, const char* time)
     ss = conv2d(time + 6);
 }
 
+// Make a DateTime from another DateTime
+DateTime::DateTime (const DateTime &dt)
+{
+    yOff = dt.yOff;
+    m    = dt.m;
+    d    = dt.d;
+    hh   = dt.hh;
+    mm   = dt.mm;
+    ss   = dt.ss;
+}
+
 uint8_t DateTime::dayOfWeek() const
 {
     uint16_t day = date2days(yOff, m, d);
@@ -193,6 +204,22 @@ uint8_t bin2bcd (uint8_t val)
 
 ////////////////////////////////////////////////////////////////////////////////
 // RTC_Millis implementation
+
+RTC_Millis::RTC_Millis()
+{
+    adjust(DateTime(2000, 1, 1, 0, 0, 0));
+}
+
+uint8_t RTC_Millis::begin()
+{
+    return 1;
+}
+
+uint8_t RTC_Millis::begin(const DateTime& dt)
+{
+    adjust(dt);
+    return 1;
+}
 
 void RTC_Millis::adjust(const DateTime& dt)
 {
