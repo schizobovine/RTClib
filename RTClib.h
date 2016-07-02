@@ -28,11 +28,11 @@ uint8_t bin2bcd (uint8_t val);
 class RTC
 {
     public:
-        RTC(void);
-        bool begin(void);
-        void adjust(const DateTime& dt);
-        bool isrunning(void);
-        DateTime now(void);
+        RTC(void) {};
+        bool begin(void) { return true; };
+        void adjust(const DateTime& dt) {};
+        bool isrunning(void) { return false; };
+        DateTime now(void) { return DateTime(); };
 
 };
 
