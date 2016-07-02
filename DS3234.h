@@ -7,7 +7,7 @@
 #include <RTClib.h>
 
 // RTC based on the DS3234 chip connected via SPI and the SPI library
-class RTC_DS3234 : RTC
+class RTC_DS3234 : public RTC
 {
 public:
     RTC_DS3234(int _cs_pin): cs_pin(_cs_pin) {}

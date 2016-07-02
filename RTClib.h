@@ -41,7 +41,7 @@ class RTC
 // NOTE: this clock won't be correct once the millis() timer rolls over (>49d?)
 // TODO This should be fixable?
 //
-class RTC_Millis : RTC
+class RTC_Millis : public RTC
 {
 public:
     RTC_Millis(void);
