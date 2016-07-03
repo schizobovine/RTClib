@@ -25,10 +25,10 @@ uint8_t bin2bcd (uint8_t val);
 //
 // Base RTC class to wrangle all the chips into one interface
 // 
-class RTC
+class RTC_Base
 {
     public:
-        RTC(void) {};
+        RTC_Base(void) {};
         bool begin(void) { return true; };
         void adjust(const DateTime& dt) {};
         bool isrunning(void) { return false; };
@@ -41,7 +41,7 @@ class RTC
 // NOTE: this clock won't be correct once the millis() timer rolls over (>49d?)
 // TODO This should be fixable?
 //
-class RTC_Millis : public RTC
+class RTC_Millis : public RTC_Base
 {
 public:
     RTC_Millis(void);

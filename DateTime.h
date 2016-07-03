@@ -58,13 +58,18 @@ class DateTime {
         uint32_t unixtime(void) const;
 
         // as a string
-        char* toString(char* buf, int maxlen) const;
+        char* toString(char* buf, size_t maxlen) const;
+        String toString();
+        String toString(String &s);
+        String iso8601();
+        String iso8601(String &s);
 
         // add additional time
         void operator+=(uint32_t);
 
     protected:
         uint8_t yOff, m, d, hh, mm, ss;
+
 };
 
 #endif

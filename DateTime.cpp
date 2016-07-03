@@ -132,7 +132,7 @@ uint32_t DateTime::unixtime(void) const
 }
 
 // as a string
-char* DateTime::toString(char* buf, int maxlen) const
+char* DateTime::toString(char* buf, size_t maxlen) const
 {
     snprintf(buf,maxlen,"%s %02u %04u %02u:%02u:%02u",
              months[m-1],
@@ -143,6 +143,50 @@ char* DateTime::toString(char* buf, int maxlen) const
              ss
             );
     return buf;
+}
+
+// as a string, but using Strings
+String DateTime::toString() {
+    String s = new String();
+    return this->toString(s);
+}
+
+static const String HYPHEN = String(F("-"));
+static const String COLON = String(F(":"));
+static const String SPACE = String(F(" "));
+static const String ZERO = String(F("0"));
+static const String EMPTY = String(F(""));
+
+#define ZEROPAD(str, val) ((str) += (((val) < 10) ? ZERO : EMPTY) + String((val)))
+
+String DateTime::toString(String &s) {
+
+    if (s.length()) s.remove(0);
+
+    s += String(2000 + this->yOff);
+    s += HYPHEN;
+    ZEROPAD(s, this->m);
+    s += HYPHEN;
+    ZEROPAD(s, this->d);
+
+    s += SPACE;
+
+    ZEROPAD(s, this->hh);
+    s += COLON;
+    ZEROPAD(s, this->mm);
+    s += COLON;
+    ZEROPAD(s, this->ss);
+
+    return s;
+}
+
+String DateTime::iso8601() {
+    String s = new String();
+    return this->iso8601(s);
+}
+
+String DateTime::iso8601(String &s) {
+    return this->toString(s);
 }
 
 void DateTime::operator+=(uint32_t additional)
