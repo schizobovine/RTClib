@@ -9,6 +9,7 @@
 #include <pgmspace.h>
 #endif
 
+#include <stdlib.h>
 #include <SPI.h>
 #include "RTClib.h"
 #include "DS3234.h"
@@ -67,7 +68,7 @@ bool RTC_DS3234::isrunning(void)
     SPI.transfer(CONTROL_R);
     uint8_t ss = SPI.transfer(-1);
     cs(HIGH);
-    return !(ss & _BV(OSF));
+    return !(ss & (1<<(OSF)));
 }
 
 void RTC_DS3234::adjust(const DateTime& dt)
