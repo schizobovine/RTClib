@@ -4,7 +4,11 @@
 #ifndef __DATETIME_H
 #define __DATETIME_H
 
-#define RTC_SECONDS_FROM_1970_TO_2000 946684800
+#include <time.h>
+
+#ifndef UNIX_OFFSET
+#define UNIX_OFFSET 946684800
+#endif
 
 //
 // Simple general-purpose date/time class (no TZ / DST / leap second handling!)

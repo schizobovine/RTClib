@@ -18,7 +18,7 @@
 
 DateTime::DateTime (uint32_t t)
 {
-    t -= RTC_SECONDS_FROM_1970_TO_2000;    // bring to 2000 timestamp from 1970
+    t -= UNIX_OFFSET;    // bring to 2000 timestamp from 1970
 
     ss = t % 60;
     t /= 60;
@@ -126,7 +126,7 @@ uint32_t DateTime::unixtime(void) const
     uint32_t t;
     uint16_t days = date2days(yOff, m, d);
     t = time2long(days, hh, mm, ss);
-    t += RTC_SECONDS_FROM_1970_TO_2000;  // seconds from 1970 to 2000
+    t += UNIX_OFFSET;  // seconds from 1970 to 2000
 
     return t;
 }
@@ -147,8 +147,8 @@ char* DateTime::toString(char* buf, size_t maxlen) const
 
 // as a string, but using Strings
 String DateTime::toString() {
-    String s = new String();
-    return this->toString(s);
+    String *s = new String();
+    return this->toString(*s);
 }
 
 static const String HYPHEN = String(F("-"));
@@ -156,6 +156,7 @@ static const String COLON = String(F(":"));
 static const String SPACE = String(F(" "));
 static const String ZERO = String(F("0"));
 static const String EMPTY = String(F(""));
+static const size_t ISO8601_STRLEN = 20;
 
 #define ZEROPAD(str, val) ((str) += (((val) < 10) ? ZERO : EMPTY) + String((val)))
 
@@ -181,8 +182,8 @@ String DateTime::toString(String &s) {
 }
 
 String DateTime::iso8601() {
-    String s = new String();
-    return this->iso8601(s);
+    String *s = new String();
+    return this->iso8601(*s);
 }
 
 String DateTime::iso8601(String &s) {
