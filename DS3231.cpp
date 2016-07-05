@@ -28,9 +28,6 @@
 #include "RTClib.h"
 #include "DS3231.h"
 
-#define SEND(x) write(static_cast<uint8_t>(x))
-#define RECEIVE(x) read(x)
-
 ////////////////////////////////////////////////////////////////////////////////
 // RTC_DS3231 implementation
 
@@ -42,16 +39,16 @@ bool RTC_DS3231::begin(void)
 bool RTC_DS3231::enable(void)
 {
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND(DS3231_REG_CONTROL);
+    Wire.write(DS3231_REG_CONTROL);
     Wire.endTransmission();
     Wire.requestFrom(DS3231_ADDRESS, 1);
-    uint8_t ctrl = Wire.RECEIVE();
+    uint8_t ctrl = Wire.read();
     
     // If oscillator is set off, flip it on
     if ((ctrl & DS3231_CTRL_EOSC) != 0) {
         Wire.beginTransmission(DS3231_ADDRESS);
-        Wire.SEND(DS3231_REG_CONTROL);
-        Wire.SEND(ctrl & (~DS3231_CTRL_EOSC));
+        Wire.write(DS3231_REG_CONTROL);
+        Wire.write(ctrl & (~DS3231_CTRL_EOSC));
         Wire.endTransmission();
     }
 
@@ -61,10 +58,10 @@ bool RTC_DS3231::enable(void)
 bool RTC_DS3231::isrunning(void)
 {
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND(DS3231_REG_STATUS_CTL);
+    Wire.write(DS3231_REG_STATUS_CTL);
     Wire.endTransmission();
     Wire.requestFrom(DS3231_ADDRESS, 1);
-    uint8_t ctrl = Wire.RECEIVE() & DS3231_CTRL_OSF;
+    uint8_t ctrl = Wire.read() & DS3231_CTRL_OSF;
     return (ctrl == 0);
 }
 
@@ -75,15 +72,15 @@ void RTC_DS3231::adjust(const DateTime& dt)
 {
     //set the address pointer and then start writing
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND( DS3231_REG_SECONDS );           // was just '0'
-    Wire.SEND(bin2bcd(dt.second()));
-    Wire.SEND(bin2bcd(dt.minute()));
-    Wire.SEND(bin2bcd(dt.hour()));
-    Wire.SEND(bin2bcd(0));
-    Wire.SEND(bin2bcd(dt.day()));
-    Wire.SEND(bin2bcd(dt.month()));
-    Wire.SEND(bin2bcd(dt.year() - 2000));
-    Wire.SEND(0);
+    Wire.write( DS3231_REG_SECONDS );           // was just '0'
+    Wire.write(bin2bcd(dt.second()));
+    Wire.write(bin2bcd(dt.minute()));
+    Wire.write(bin2bcd(dt.hour()));
+    Wire.write(bin2bcd(0));
+    Wire.write(bin2bcd(dt.day()));
+    Wire.write(bin2bcd(dt.month()));
+    Wire.write(bin2bcd(dt.year() - 2000));
+    Wire.write(0);
     Wire.endTransmission();
 }
 
@@ -95,17 +92,17 @@ DateTime RTC_DS3231::now()
 {
     //set the address pointer in preparation for read
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND( DS3231_REG_SECONDS );           // was just '0'
+    Wire.write( DS3231_REG_SECONDS );           // was just '0'
     Wire.endTransmission();
 
     Wire.requestFrom(DS3231_ADDRESS, 7);
-    uint8_t ss = bcd2bin(Wire.RECEIVE() & 0x7F);
-    uint8_t mm = bcd2bin(Wire.RECEIVE());
-    uint8_t hh = bcd2bin(Wire.RECEIVE());
-    Wire.RECEIVE();
-    uint8_t d = bcd2bin(Wire.RECEIVE());
-    uint8_t m = bcd2bin(Wire.RECEIVE());
-    uint16_t y = bcd2bin(Wire.RECEIVE()) + 2000;
+    uint8_t ss = bcd2bin(Wire.read() & 0x7F);
+    uint8_t mm = bcd2bin(Wire.read());
+    uint8_t hh = bcd2bin(Wire.read());
+    Wire.read();
+    uint8_t d = bcd2bin(Wire.read());
+    uint8_t m = bcd2bin(Wire.read());
+    uint16_t y = bcd2bin(Wire.read()) + 2000;
 
     return DateTime (y, m, d, hh, mm, ss);
 }
@@ -125,12 +122,12 @@ float RTC_DS3231::getTempAsFloat()
 {
     //set the address pointer in preparation for read
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND( DS3231_REG_TEMP_MSB );           // was just '0'
+    Wire.write( DS3231_REG_TEMP_MSB );           // was just '0'
     Wire.endTransmission();
 
     Wire.requestFrom(DS3231_ADDRESS, 2);
-    int8_t sig   = Wire.RECEIVE();                  //signed MSB
-    uint8_t fract = Wire.RECEIVE() & 0b11000000;    //rest should be zeroes anyway.
+    int8_t sig   = Wire.read();                  //signed MSB
+    uint8_t fract = Wire.read() & 0b11000000;    //rest should be zeroes anyway.
     
     fract = fract >> 6;                // now in 2 lsb's
     float temp = (float)fract * 0.25;  // total up,  .00, .25, .50
@@ -160,12 +157,12 @@ int16_t RTC_DS3231::getTempAsWord()
 {
     //set the address pointer in preparation for read
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND( DS3231_REG_TEMP_MSB );           // was just '0'
+    Wire.write( DS3231_REG_TEMP_MSB );           // was just '0'
     Wire.endTransmission();
 
     Wire.requestFrom(DS3231_ADDRESS, 2);
-    int8_t sig   = Wire.RECEIVE();                  //signed MSB
-    uint8_t fract = Wire.RECEIVE() & 0b11000000;    //rest should be zeroes anyway.
+    int8_t sig   = Wire.read();                  //signed MSB
+    uint8_t fract = Wire.read() & 0b11000000;    //rest should be zeroes anyway.
     
     int16_t temp = sig;           //put into lower byte
     temp = temp << 8 ;            //shift to upper byte
@@ -187,13 +184,13 @@ int16_t RTC_DS3231::getTempAsWord()
 void RTC_DS3231::enable32kHz(uint8_t enable)
 {
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND( DS3231_REG_STATUS_CTL );  
+    Wire.write( DS3231_REG_STATUS_CTL );  
     Wire.endTransmission();
 
     // status register
     Wire.requestFrom(DS3231_ADDRESS, 1);
 
-    uint8_t sreg = bcd2bin(Wire.RECEIVE());    // do we need to wrap in bcd2bin?
+    uint8_t sreg = bcd2bin(Wire.read());    // do we need to wrap in bcd2bin?
 
     if (enable == true) {
         sreg |=  0b00001000; // Enable EN32KHZ bit
@@ -202,8 +199,8 @@ void RTC_DS3231::enable32kHz(uint8_t enable)
     }
 
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND( DS3231_REG_STATUS_CTL );
-    Wire.SEND(sreg);
+    Wire.write( DS3231_REG_STATUS_CTL );
+    Wire.write(sreg);
     Wire.endTransmission();
 }
 
@@ -221,29 +218,29 @@ void RTC_DS3231::enable32kHz(uint8_t enable)
 void RTC_DS3231::forceTempConv(uint8_t block)
 {
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND( DS3231_REG_CONTROL );
+    Wire.write( DS3231_REG_CONTROL );
     Wire.endTransmission();
 
     // control register
     Wire.requestFrom(DS3231_ADDRESS, 1);
 
-    uint8_t creg = Wire.RECEIVE();  // do we need the bcd2bin
+    uint8_t creg = Wire.read();  // do we need the bcd2bin
 
     creg |= 0b00100000; // Write CONV bit
 
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND(DS3231_REG_CONTROL);
-    Wire.SEND(creg);
+    Wire.write(DS3231_REG_CONTROL);
+    Wire.write(creg);
     Wire.endTransmission();
 
     do
     {
         // Block until CONV is 0
         Wire.beginTransmission(DS3231_ADDRESS);
-        Wire.SEND(DS3231_REG_CONTROL);
+        Wire.write(DS3231_REG_CONTROL);
         Wire.endTransmission();
         Wire.requestFrom(DS3231_ADDRESS, 1);
-    } while ((block && (Wire.RECEIVE() & 0b00100000) != 0));
+    } while ((block && (Wire.read() & 0b00100000) != 0));
 }  
 
 
@@ -257,13 +254,13 @@ void RTC_DS3231::forceTempConv(uint8_t block)
 void RTC_DS3231::SQWEnable(uint8_t enable)
 {
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND(DS3231_REG_CONTROL);
+    Wire.write(DS3231_REG_CONTROL);
     Wire.endTransmission();
 
     // control register
     Wire.requestFrom(DS3231_ADDRESS, 1);
 
-    uint8_t creg = Wire.RECEIVE();     //do we need the bcd2bin
+    uint8_t creg = Wire.read();     //do we need the bcd2bin
 
     
     if (enable == true) {
@@ -273,8 +270,8 @@ void RTC_DS3231::SQWEnable(uint8_t enable)
     }
 
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND(DS3231_REG_CONTROL);
-    Wire.SEND(creg);
+    Wire.write(DS3231_REG_CONTROL);
+    Wire.write(creg);
     Wire.endTransmission();
 }
 
@@ -289,13 +286,13 @@ void RTC_DS3231::SQWEnable(uint8_t enable)
 void RTC_DS3231::BBSQWEnable(uint8_t enable)
 {
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND(DS3231_REG_CONTROL);
+    Wire.write(DS3231_REG_CONTROL);
     Wire.endTransmission();
 
     // control register
     Wire.requestFrom(DS3231_ADDRESS, 1);
 
-    uint8_t creg = Wire.RECEIVE();     //do we need the bcd2bin
+    uint8_t creg = Wire.read();     //do we need the bcd2bin
 
 
     if (enable == true) {
@@ -307,8 +304,8 @@ void RTC_DS3231::BBSQWEnable(uint8_t enable)
     }
 
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND(DS3231_REG_CONTROL);
-    Wire.SEND(creg);
+    Wire.write(DS3231_REG_CONTROL);
+    Wire.write(creg);
     Wire.endTransmission();
 }
 
@@ -321,20 +318,20 @@ void RTC_DS3231::BBSQWEnable(uint8_t enable)
 void RTC_DS3231::SQWFrequency(uint8_t freq)
 {
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND(DS3231_REG_CONTROL);
+    Wire.write(DS3231_REG_CONTROL);
     Wire.endTransmission();
 
     // control register
     Wire.requestFrom(DS3231_ADDRESS, 1);
 
-    uint8_t creg = Wire.RECEIVE();
+    uint8_t creg = Wire.read();
 
     creg &= ~0b00011000; // Set to 0
     creg |= freq; // Set freq bits
 
     Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.SEND(0x0E);
-    Wire.SEND(creg);
+    Wire.write(0x0E);
+    Wire.write(creg);
     Wire.endTransmission();
 }
 
@@ -346,8 +343,8 @@ void RTC_DS3231::getControlRegisterData(char &datastr) {
 
     // control registers
     Wire.requestFrom(DS3231_ADDRESS, 2);
-    uint8_t creg = Wire.RECEIVE();  // do we need the bcd2bin
-    uint8_t sreg = Wire.RECEIVE(); 
+    uint8_t creg = Wire.read();  // do we need the bcd2bin
+    uint8_t sreg = Wire.read(); 
     
     char cregstr[] = "00000000";
     char sregstr[] = "00000000";

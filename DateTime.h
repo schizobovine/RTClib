@@ -6,9 +6,7 @@
 
 #include <time.h>
 
-#ifndef UNIX_OFFSET
-#define UNIX_OFFSET 946684800
-#endif
+#define UNIX_EPOCH_OFFSET 946684800
 
 //
 // Simple general-purpose date/time class (no TZ / DST / leap second handling!)
