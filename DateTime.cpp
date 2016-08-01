@@ -151,17 +151,24 @@ String DateTime::toString() {
     return this->toString(*s);
 }
 
-static const char* C_HYPHEN PROGMEM = "-";
-static const char* C_COLON  PROGMEM = ":";
-static const char* C_SPACE  PROGMEM = " ";
-static const char* C_ZERO   PROGMEM = "0";
-static const char* C_EMPTY  PROGMEM = "";
+//static const char* C_HYPHEN PROGMEM = "-";
+//static const char* C_COLON  PROGMEM = ":";
+//static const char* C_SPACE  PROGMEM = " ";
+//static const char* C_ZERO   PROGMEM = "0";
+//static const char* C_EMPTY  PROGMEM = "";
 
-#define HYPHEN (String(C_HYPHEN))
-#define COLON  (String(C_COLON))
-#define SPACE  (String(C_SPACE))
-#define ZERO   (String(C_ZERO))
-#define EMPTY  (String(C_EMPTY))
+//#define HYPHEN (String(C_HYPHEN))
+//#define COLON  (String(C_COLON))
+//#define SPACE  (String(C_SPACE))
+//#define ZERO   (String(C_ZERO))
+//#define EMPTY  (String(C_EMPTY))
+
+
+#define HYPHEN (String(F("-")))
+#define COLON  (String(F(":")))
+#define SPACE  (String(F(" ")))
+#define ZERO   (String(F("0")))
+#define EMPTY  (String(F("")))
 
 #define ZEROPAD(str, val) ((str) += (((val) < 10) ? ZERO : EMPTY) + String((val)))
 

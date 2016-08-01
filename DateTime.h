@@ -4,8 +4,6 @@
 #ifndef __DATETIME_H
 #define __DATETIME_H
 
-#include <time.h>
-
 #define UNIX_EPOCH_OFFSET 946684800
 
 //
