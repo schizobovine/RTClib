@@ -118,26 +118,26 @@ DateTime RTC_DS3231::now()
  *
  *  This function has not been tested
  */
-float RTC_DS3231::getTempAsFloat()
-{
-    //set the address pointer in preparation for read
-    Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.write( DS3231_REG_TEMP_MSB );           // was just '0'
-    Wire.endTransmission();
-
-    Wire.requestFrom(DS3231_ADDRESS, 2);
-    int8_t sig   = Wire.read();                  //signed MSB
-    uint8_t fract = Wire.read() & 0b11000000;    //rest should be zeroes anyway.
-    
-    fract = fract >> 6;                // now in 2 lsb's
-    float temp = (float)fract * 0.25;  // total up,  .00, .25, .50
-    if(sig < 0) {
-        temp = sig - temp;             // calculate the fract correctly
-    } else {
-        temp = sig + temp;             // add    25 + .25 = 25.25
-    }
-    return temp;
-}
+//float RTC_DS3231::getTempAsFloat()
+//{
+//    //set the address pointer in preparation for read
+//    Wire.beginTransmission(DS3231_ADDRESS);
+//    Wire.write( DS3231_REG_TEMP_MSB );           // was just '0'
+//    Wire.endTransmission();
+//
+//    Wire.requestFrom(DS3231_ADDRESS, 2);
+//    int8_t sig   = Wire.read();                  //signed MSB
+//    uint8_t fract = Wire.read() & 0b11000000;    //rest should be zeroes anyway.
+//    
+//    fract = fract >> 6;                // now in 2 lsb's
+//    float temp = (float)fract * 0.25;  // total up,  .00, .25, .50
+//    if(sig < 0) {
+//        temp = sig - temp;             // calculate the fract correctly
+//    } else {
+//        temp = sig + temp;             // add    25 + .25 = 25.25
+//    }
+//    return temp;
+//}
 
 /**
  * Return temperature as a 2 bytes in degrees C
@@ -153,27 +153,27 @@ float RTC_DS3231::getTempAsFloat()
  *
  *  This function has not been tested
  */
-int16_t RTC_DS3231::getTempAsWord()
-{
-    //set the address pointer in preparation for read
-    Wire.beginTransmission(DS3231_ADDRESS);
-    Wire.write( DS3231_REG_TEMP_MSB );           // was just '0'
-    Wire.endTransmission();
-
-    Wire.requestFrom(DS3231_ADDRESS, 2);
-    int8_t sig   = Wire.read();                  //signed MSB
-    uint8_t fract = Wire.read() & 0b11000000;    //rest should be zeroes anyway.
-    
-    int16_t temp = sig;           //put into lower byte
-    temp = temp << 8 ;            //shift to upper byte
-    
-    fract = fract >> 6;                // shift upper 2 bits to lowest 2 
-    fract = fract * 25;                // multiply up
-    
-    temp = temp + fract;
-    
-    return temp;
-}
+//int16_t RTC_DS3231::getTempAsWord()
+//{
+//    //set the address pointer in preparation for read
+//    Wire.beginTransmission(DS3231_ADDRESS);
+//    Wire.write( DS3231_REG_TEMP_MSB );           // was just '0'
+//    Wire.endTransmission();
+//
+//    Wire.requestFrom(DS3231_ADDRESS, 2);
+//    int8_t sig   = Wire.read();                  //signed MSB
+//    uint8_t fract = Wire.read() & 0b11000000;    //rest should be zeroes anyway.
+//    
+//    int16_t temp = sig;           //put into lower byte
+//    temp = temp << 8 ;            //shift to upper byte
+//    
+//    fract = fract >> 6;                // shift upper 2 bits to lowest 2 
+//    fract = fract * 25;                // multiply up
+//    
+//    temp = temp + fract;
+//    
+//    return temp;
+//}
 
 
 /**

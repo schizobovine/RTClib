@@ -22,10 +22,6 @@
 const uint8_t daysInMonth[] PROGMEM = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
-const char* months[] = {
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-};
 
 // number of days since 2000/01/01, valid for 2001..2099
 uint16_t date2days(uint16_t y, uint8_t m, uint8_t d)

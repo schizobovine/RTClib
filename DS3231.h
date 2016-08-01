@@ -61,8 +61,8 @@ public:
     bool isrunning(void);
     DateTime now();
 
-    float getTempAsFloat();
-    int16_t getTempAsWord();
+    //float getTempAsFloat();
+    //int16_t getTempAsWord();
     void enable32kHz(uint8_t enable);
     void forceTempConv(uint8_t block);
     void SQWEnable(uint8_t enable);

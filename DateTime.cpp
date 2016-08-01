@@ -132,37 +132,24 @@ uint32_t DateTime::unixtime(void) const
 }
 
 // as a string
-char* DateTime::toString(char* buf, size_t maxlen) const
-{
-    snprintf(buf,maxlen,"%s %02u %04u %02u:%02u:%02u",
-             months[m-1],
-             d,
-             2000 + yOff,
-             hh,
-             mm,
-             ss
-            );
-    return buf;
-}
+//char* DateTime::toString(char* buf, size_t maxlen) const
+//{
+//    snprintf(buf,maxlen,"%s %02u %04u %02u:%02u:%02u",
+//             months[m-1],
+//             d,
+//             2000 + yOff,
+//             hh,
+//             mm,
+//             ss
+//            );
+//    return buf;
+//}
 
 // as a string, but using Strings
 String DateTime::toString() {
     String *s = new String();
     return this->toString(*s);
 }
-
-//static const char* C_HYPHEN PROGMEM = "-";
-//static const char* C_COLON  PROGMEM = ":";
-//static const char* C_SPACE  PROGMEM = " ";
-//static const char* C_ZERO   PROGMEM = "0";
-//static const char* C_EMPTY  PROGMEM = "";
-
-//#define HYPHEN (String(C_HYPHEN))
-//#define COLON  (String(C_COLON))
-//#define SPACE  (String(C_SPACE))
-//#define ZERO   (String(C_ZERO))
-//#define EMPTY  (String(C_EMPTY))
-
 
 #define HYPHEN (String(F("-")))
 #define COLON  (String(F(":")))

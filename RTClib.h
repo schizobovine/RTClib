@@ -10,7 +10,6 @@
 // Constant lookup tables
 //
 extern const uint8_t daysInMonth[] PROGMEM;
-extern const char* months[];
 
 //
 // Utility functions

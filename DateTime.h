@@ -58,7 +58,7 @@ class DateTime {
         uint32_t unixtime(void) const;
 
         // as a string
-        char* toString(char* buf, size_t maxlen) const;
+        //char* toString(char* buf, size_t maxlen) const;
         String toString();
         String toString(String &s);
         String iso8601();
