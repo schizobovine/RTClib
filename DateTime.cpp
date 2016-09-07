@@ -18,32 +18,7 @@
 
 DateTime::DateTime (uint32_t t)
 {
-    t -= UNIX_EPOCH_OFFSET;    // bring to 2000 timestamp from 1970
-
-    ss = t % 60;
-    t /= 60;
-    mm = t % 60;
-    t /= 60;
-    hh = t % 24;
-    uint16_t days = t / 24;
-    uint8_t leap;
-    for (yOff = 0; ; ++yOff)
-    {
-        leap = yOff % 4 == 0;
-        if (days < 365U + leap)
-            break;
-        days -= 365 + leap;
-    }
-    for (m = 1; ; ++m)
-    {
-        uint8_t daysPerMonth = pgm_read_byte(daysInMonth + m - 1);
-        if (leap && m == 2)
-            ++daysPerMonth;
-        if (days < daysPerMonth)
-            break;
-        days -= daysPerMonth;
-    }
-    d = days + 1;
+    this->setTime(t);
 }
 
 DateTime::DateTime (uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
@@ -107,12 +82,58 @@ DateTime::DateTime (const char* date, const char* time)
 // Make a DateTime from another DateTime
 DateTime::DateTime (const DateTime &dt)
 {
-    yOff = dt.yOff;
-    m    = dt.m;
-    d    = dt.d;
-    hh   = dt.hh;
-    mm   = dt.mm;
-    ss   = dt.ss;
+    this->setTime(dt);
+}
+
+void DateTime::setTime(const DateTime &dt) {
+    this->yOff = dt.yOff;
+    this->m    = dt.m;
+    this->d    = dt.d;
+    this->hh   = dt.hh;
+    this->mm   = dt.mm;
+    this->ss   = dt.ss;
+}
+
+void DateTime::setTime(const DateTime *dt) {
+    this->yOff = dt->yOff;
+    this->m    = dt->m;
+    this->d    = dt->d;
+    this->hh   = dt->hh;
+    this->mm   = dt->mm;
+    this->ss   = dt->ss;
+}
+
+void DateTime::setTime(uint32_t t) {
+
+    t -= UNIX_EPOCH_OFFSET;    // bring to 2000 timestamp from 1970
+
+    this->ss = t % 60;
+    t /= 60;
+    this->mm = t % 60;
+    t /= 60;
+    this->hh = t % 24;
+
+    uint16_t days = t / 24;
+    uint8_t leap;
+    for (this->yOff = 0; ; ++(this->yOff))
+    {
+        leap = this->yOff % 4 == 0;
+        if (days < 365U + leap)
+            break;
+        days -= 365 + leap;
+    }
+
+    for (this->m = 1; ; ++(this->m))
+    {
+        uint8_t daysPerMonth = pgm_read_byte(daysInMonth + m - 1);
+        if (leap && this->m == 2)
+            ++daysPerMonth;
+        if (days < daysPerMonth)
+            break;
+        days -= daysPerMonth;
+    }
+    this->d = days + 1;
+
 }
 
 uint8_t DateTime::dayOfWeek() const
@@ -205,7 +226,19 @@ String DateTime::iso8601(String &s) {
 void DateTime::operator+=(uint32_t additional)
 {
     DateTime after = DateTime( unixtime() + additional );
-    *this = after;
+    this->setTime(&after);
+}
+
+void DateTime::operator=(const uint32_t ts) {
+    this->setTime(ts);
+}
+
+void DateTime::operator=(const DateTime &dt) {
+    this->setTime(dt);
+}
+
+void DateTime::operator=(const DateTime *dt) {
+    this->setTime(dt);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

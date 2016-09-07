@@ -64,6 +64,14 @@ class DateTime {
         String iso8601();
         String iso8601(String &s);
 
+        // set time
+        void operator=(const uint32_t ts);
+        void operator=(const DateTime &dt);
+        void operator=(const DateTime *dt);
+        void setTime(uint32_t ts);
+        void setTime(const DateTime &dt);
+        void setTime(const DateTime *dt);
+
         // add additional time
         void operator+=(uint32_t);
 
